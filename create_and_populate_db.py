@@ -1,5 +1,5 @@
 import sqlite3
-
+# Run 'python create_and_populate_db.py' in your command line to create and populate DB
 DATABASE_FILE = "league_database.sqlite3"
 
 CREATE_TABLES_SQL = """
