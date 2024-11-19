@@ -1,0 +1,13 @@
+<h1>Total Goals by Team</h1>
+<table border="1">
+    <tr>
+        <th>School Name</th>
+        <th>Total Goals</th>
+    </tr>
+    {% for team in team_goals %}
+    <tr>
+        <td>{{ team.SchoolName }}</td>
+        <td>{{ team.TotalGoals }}</td>
+    </tr>
+    {% endfor %}
+</table>

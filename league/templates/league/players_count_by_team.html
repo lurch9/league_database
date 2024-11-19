@@ -1,0 +1,13 @@
+<h1>Player Count by Team</h1>
+<table border="1">
+    <tr>
+        <th>Team ID</th>
+        <th>Player Count</th>
+    </tr>
+    {% for team in team_counts %}
+    <tr>
+        <td>{{ team.TeamID }}</td>
+        <td>{{ team.PlayerCount }}</td>
+    </tr>
+    {% endfor %}
+</table>

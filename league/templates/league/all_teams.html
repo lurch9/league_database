@@ -1,0 +1,19 @@
+<h1>All Teams</h1>
+<table border="1">
+    <tr>
+        <th>Team ID</th>
+        <th>School Name</th>
+        <th>AD Phone</th>
+        <th>AD Email</th>
+        <th>Location</th>
+    </tr>
+    {% for team in teams %}
+    <tr>
+        <td>{{ team.TeamID }}</td>
+        <td>{{ team.SchoolName }}</td>
+        <td>{{ team.ADPhone }}</td>
+        <td>{{ team.ADEmail }}</td>
+        <td>{{ team.Location }}</td>
+    </tr>
+    {% endfor %}
+</table>
