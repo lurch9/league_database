@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Details</title>
+</head>
+<body>
+    <h1>Team Details: {{ team.SchoolName }}</h1>
+
+    <h2>Contact Information</h2>
+    <p><strong>Phone:</strong> {{ team.ADPhone }}</p>
+    <p><strong>Email:</strong> {{ team.ADEmail }}</p>
+    <p><strong>Location:</strong> {{ team.Location }}</p>
+
+    <h2>Players</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for column in players.0.keys %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    {% for value in player.values %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Matches</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Match Date</th>
+                <th>Home Team</th>
+                <th>Away Team</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match.MatchDate }}</td>
+                    <td>{{ match.HomeTeam }}</td>
+                    <td>{{ match.AwayTeam }}</td>
+                    <td>
+                        <a href="/match/{{ match.MatchID }}/stats/">View Match Stats</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

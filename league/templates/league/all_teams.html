@@ -1,19 +1,33 @@
-<h1>All Teams</h1>
-<table border="1">
-    <tr>
-        <th>Team ID</th>
-        <th>School Name</th>
-        <th>AD Phone</th>
-        <th>AD Email</th>
-        <th>Location</th>
-    </tr>
-    {% for team in teams %}
-    <tr>
-        <td>{{ team.TeamID }}</td>
-        <td>{{ team.SchoolName }}</td>
-        <td>{{ team.ADPhone }}</td>
-        <td>{{ team.ADEmail }}</td>
-        <td>{{ team.Location }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Teams</title>
+</head>
+<body>
+    <h1>All Teams</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for column in teams.0.keys %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+                <tr>
+                    {% for value in team.values %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                    <td>
+                        <a href="/teams/{{ team.TeamID }}/">View Details</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
