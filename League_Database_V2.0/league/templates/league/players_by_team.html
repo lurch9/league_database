@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Players by Team</title>
+</head>
+<body>
+    <h1>Players by Team</h1>
+    <form method="get" action="">
+        <label for="team_name">Enter Team Name:</label>
+        <input type="text" id="team_name" name="team_name" value="{{ team_name }}">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if team_name %}
+        <h2>Results for "{{ team_name }}"</h2>
+        {% if players %}
+            <table border="1">
+                <tr>
+                    {% for column in players.0.keys %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+                {% for player in players %}
+                    <tr>
+                        {% for value in player.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No players found for the team "{{ team_name }}".</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
+<br>
+<button><a href="/">Exit</a></button>

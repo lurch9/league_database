@@ -1,0 +1,19 @@
+<h1>Player Stats for Match {{ match_id }}</h1>
+<table border="1">
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Goals</th>
+        <th>Assists</th>
+    </tr>
+    {% for stat in stats %}
+    <tr>
+        <td>{{ stat.FirstName }}</td>
+        <td>{{ stat.LastName }}</td>
+        <td>{{ stat.Goals }}</td>
+        <td>{{ stat.Assists }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<button><a href="/">Exit</a></button>
