@@ -1,9 +1,27 @@
 from django.shortcuts import render
-from django.db import connection
 from django.shortcuts import render
+from django.db import connection
 
 def homepage(request):
-    return render(request, 'league/homepage.html')
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT t.TeamID, t.SchoolName,
+                   SUM(CASE WHEN t.TeamID = r.WinnerID THEN 1 ELSE 0 END) AS Wins,
+                   SUM(CASE WHEN t.TeamID <> r.WinnerID AND (m.HomeTeamID = t.TeamID OR m.AwayTeamID = t.TeamID) THEN 1 ELSE 0 END) AS Losses,
+                   CAST(SUM(CASE WHEN t.TeamID = r.WinnerID THEN 1 ELSE 0 END) AS FLOAT) /
+                   NULLIF(SUM(CASE WHEN t.TeamID = r.WinnerID OR t.TeamID <> r.WinnerID THEN 1 ELSE 0 END), 0) AS WinPercentage
+            FROM Team t
+            LEFT JOIN Match m ON t.TeamID = m.HomeTeamID OR t.TeamID = m.AwayTeamID
+            LEFT JOIN Result r ON m.MatchID = r.MatchID
+            GROUP BY t.TeamID, t.SchoolName
+            ORDER BY Wins DESC, Losses ASC
+        """)
+        rows = cursor.fetchall()
+        columns = [col[0] for col in cursor.description]
+        team_rankings = [dict(zip(columns, row)) for row in rows]
+    return render(request, 'league/homepage.html', {'team_rankings': team_rankings})
+
+
 
 
 def all_teams(request):
@@ -91,8 +109,12 @@ def team_details(request, team_id):
         team_columns = [col[0] for col in cursor.description]
         team_data = dict(zip(team_columns, team)) if team else None
 
-        # Fetch players for the team
-        cursor.execute("SELECT * FROM Player WHERE TeamID = %s", [team_id])
+        # Fetch players for the team, excluding DOB
+        cursor.execute("""
+            SELECT FirstName, LastName, Number, StartingPosition
+            FROM Player
+            WHERE TeamID = %s
+        """, [team_id])
         players = cursor.fetchall()
         player_columns = [col[0] for col in cursor.description]
         player_data = [dict(zip(player_columns, player)) for player in players]
