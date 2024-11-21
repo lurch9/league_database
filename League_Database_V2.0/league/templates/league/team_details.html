@@ -18,26 +18,31 @@
         </ul>
 
         <h2>Players</h2>
-        <table class="table table-striped mb-4">
-            <thead class="thead-dark">
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Number</th>
-                    <th>Position</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for player in players %}
-                    <tr>
-                        <td>{{ player.FirstName }}</td>
-                        <td>{{ player.LastName }}</td>
-                        <td>{{ player.Number }}</td>
-                        <td>{{ player.StartingPosition }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<table class="table table-striped mb-4">
+    <thead class="thead-dark">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Number</th>
+            <th>Position</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in players %}
+            <tr>
+                <td>{{ player.FirstName }}</td>
+                <td>{{ player.LastName }}</td>
+                <td>{{ player.Number }}</td>
+                <td>{{ player.StartingPosition }}</td>
+                <td>
+                    <a href="/player/{{ player.PlayerID }}/stats/" class="btn btn-info">View Stats</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
         <h2>Matches</h2>
         <table class="table table-striped">

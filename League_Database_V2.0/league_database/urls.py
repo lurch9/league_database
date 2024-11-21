@@ -28,5 +28,6 @@ urlpatterns = [
     path('team-player-count/', views.players_count_by_team, name='players_count_by_team'),
     path('team-goals/', views.team_goals, name='team_goals'),
     path('match/<int:match_id>/stats/', views.player_stats_for_match, name='player_stats_for_match'),
+    path('player/<int:player_id>/stats/', views.player_stats, name='player_stats'),
 
 ]

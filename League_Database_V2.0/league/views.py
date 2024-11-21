@@ -109,9 +109,9 @@ def team_details(request, team_id):
         team_columns = [col[0] for col in cursor.description]
         team_data = dict(zip(team_columns, team)) if team else None
 
-        # Fetch players for the team, excluding DOB
+        # Fetch players for the team, ensuring PlayerID is included
         cursor.execute("""
-            SELECT FirstName, LastName, Number, StartingPosition
+            SELECT PlayerID, FirstName, LastName, Number, StartingPosition
             FROM Player
             WHERE TeamID = %s
         """, [team_id])
@@ -136,5 +136,25 @@ def team_details(request, team_id):
         'players': player_data,
         'matches': match_data,
     })
+
+def player_stats(request, player_id):
+    with connection.cursor() as cursor:
+        # Fetch player's overall stats
+        cursor.execute("""
+            SELECT p.FirstName, p.LastName,
+                   SUM(s.Goals) AS TotalGoals,
+                   SUM(s.Assists) AS TotalAssists
+            FROM Player p
+            LEFT JOIN Score s ON p.PlayerID = s.PlayerID
+            WHERE p.PlayerID = %s
+            GROUP BY p.FirstName, p.LastName
+        """, [player_id])
+        player_stats = cursor.fetchone()
+        columns = [col[0] for col in cursor.description]
+        player_data = dict(zip(columns, player_stats)) if player_stats else None
+
+    return render(request, 'league/player_stats.html', {'player': player_data})
+
+
 
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
+    <title>{{ player.FirstName }} {{ player.LastName }} - Stats</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">{{ player.FirstName }} {{ player.LastName }} - Stats</h1>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Total Goals:</strong> {{ player.TotalGoals }}</li>
+            <li class="list-group-item"><strong>Total Assists:</strong> {{ player.TotalAssists }}</li>
+        </ul>
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+</html>
