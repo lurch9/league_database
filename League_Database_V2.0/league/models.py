@@ -5,8 +5,26 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    ROLE_CHOICES = (
+        ('default', 'Default User'),
+        ('guardian', 'Guardian'),
+        ('coach', 'Coach'),
+        ('admin', 'Admin'),
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='default')
+    
+# Signal to automatically create Profile for new users
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
 
 class Coach(models.Model):
     coachid = models.AutoField(db_column='CoachID', primary_key=True)  # Field name made lowercase.
@@ -54,16 +72,16 @@ class GuardianPlayer(models.Model):
         db_table = 'Guardian_Player'
 
 
-class Match(models.Model):
-    matchid = models.AutoField(db_column='MatchID', primary_key=True)  # Field name made lowercase.
-    matchdate = models.TextField(db_column='MatchDate', blank=True, null=True)  # Field name made lowercase.
-    hometeamid = models.ForeignKey('Team', models.DO_NOTHING, db_column='HomeTeamID', blank=True, null=True)  # Field name made lowercase.
-    awayteamid = models.ForeignKey('Team', models.DO_NOTHING, db_column='AwayTeamID', related_name='match_awayteamid_set', blank=True, null=True)  # Field name made lowercase.
+class Team(models.Model):
+    teamid = models.AutoField(db_column='TeamID', primary_key=True)
+    schoolname = models.TextField(db_column='SchoolName', blank=True, null=True)
+    adphone = models.TextField(db_column='ADPhone', blank=True, null=True)
+    ademail = models.TextField(db_column='ADEmail', blank=True, null=True)
+    location = models.TextField(db_column='Location', blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'Match'
-
+        db_table = 'Team'
 
 class Player(models.Model):
     playerid = models.AutoField(db_column='PlayerID', primary_key=True)  # Field name made lowercase.
@@ -89,6 +107,32 @@ class PlayerPosition(models.Model):
         db_table = 'Player_Position'
 
 
+class Match(models.Model):
+    matchid = models.AutoField(db_column='MatchID', primary_key=True)
+    matchdate = models.TextField(db_column='MatchDate', blank=True, null=True)
+    hometeamid = models.ForeignKey('Team', on_delete=models.CASCADE, related_name="home_matches", db_column='HomeTeamID')
+    awayteamid = models.ForeignKey('Team', on_delete=models.CASCADE, related_name="away_matches", db_column='AwayTeamID')
+    home_score = models.IntegerField(default=0)
+    away_score = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'Match'
+
+
+
+class Score(models.Model):
+    scoreid = models.AutoField(db_column='ScoreID', primary_key=True)
+    matchid = models.ForeignKey(Match, on_delete=models.CASCADE, db_column='MatchID', related_name='scores')
+    playerid = models.ForeignKey('Player', on_delete=models.CASCADE, db_column='PlayerID')
+    goals = models.IntegerField(default=0)
+    assists = models.IntegerField(default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'Score'
+
+
 class Result(models.Model):
     resultid = models.AutoField(db_column='ResultID', primary_key=True)  # Field name made lowercase.
     matchid = models.ForeignKey(Match, models.DO_NOTHING, db_column='MatchID', blank=True, null=True)  # Field name made lowercase.
@@ -99,25 +143,4 @@ class Result(models.Model):
         db_table = 'Result'
 
 
-class Score(models.Model):
-    scoreid = models.AutoField(db_column='ScoreID', primary_key=True)  # Field name made lowercase.
-    matchid = models.ForeignKey(Match, models.DO_NOTHING, db_column='MatchID', blank=True, null=True)  # Field name made lowercase.
-    playerid = models.ForeignKey(Player, models.DO_NOTHING, db_column='PlayerID', blank=True, null=True)  # Field name made lowercase.
-    goals = models.IntegerField(db_column='Goals', blank=True, null=True)  # Field name made lowercase.
-    assists = models.IntegerField(db_column='Assists', blank=True, null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'Score'
-
-
-class Team(models.Model):
-    teamid = models.AutoField(db_column='TeamID', primary_key=True)  # Field name made lowercase.
-    schoolname = models.TextField(db_column='SchoolName', blank=True, null=True)  # Field name made lowercase.
-    adphone = models.TextField(db_column='ADPhone', blank=True, null=True)  # Field name made lowercase.
-    ademail = models.TextField(db_column='ADEmail', blank=True, null=True)  # Field name made lowercase.
-    location = models.TextField(db_column='Location', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Team'

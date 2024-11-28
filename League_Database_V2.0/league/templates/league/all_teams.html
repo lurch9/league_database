@@ -1,35 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Teams</title>
-</head>
-<body>
-    <h1>All Teams</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                {% for column in teams.0.keys %}
-                    <th>{{ column }}</th>
-                {% endfor %}
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for team in teams %}
-                <tr>
-                    {% for value in team.values %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
-                    <td>
-                        <a href="/teams/{{ team.TeamID }}/">View Details</a>
-                    </td>
-                </tr>
+{% extends "base.html" %}
+
+{% block title %}All Teams{% endblock %}
+
+{% block content %}
+<h1 class="my-4">All Teams</h1>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            {% for column in teams.0.keys %}
+                <th>{{ column }}</th>
             {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
-<br>
-<button><a href="/">Exit</a></button>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in teams %}
+            <tr>
+                {% for value in team.values %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                <td>
+                    <a href="/teams/{{ team.TeamID }}/" class="btn btn-primary">View Details</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="/" class="btn btn-secondary mt-4">Exit</a>
+{% endblock %}

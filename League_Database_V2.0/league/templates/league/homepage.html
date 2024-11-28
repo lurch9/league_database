@@ -1,38 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <title>League Team Standings</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center my-4">League Team Standings</h1>
-        <table class="table table-striped">
-            <thead class="thead-dark">
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">League Team Standings</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Rank</th>
+                <th>Team Name</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Win Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in team_rankings %}
                 <tr>
-                    <th>Rank</th>
-                    <th>Team Name</th>
-                    <th>Wins</th>
-                    <th>Losses</th>
-                    <th>Win Percentage</th>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="/teams/{{ team.TeamID }}/">{{ team.SchoolName }}</a></td>
+                    <td>{{ team.Wins }}</td>
+                    <td>{{ team.Losses }}</td>
+                    <td>{{ team.WinPercentage|floatformat:2 }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for team in team_rankings %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><a href="/teams/{{ team.TeamID }}/">{{ team.SchoolName }}</a></td>
-                        <td>{{ team.Wins }}</td>
-                        <td>{{ team.Losses }}</td>
-                        <td>{{ team.WinPercentage|floatformat:2 }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
 
 

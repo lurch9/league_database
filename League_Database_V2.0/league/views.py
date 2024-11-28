@@ -1,6 +1,240 @@
-from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import connection
+from .forms import TeamForm, PlayerForm, MatchForm, ScoreForm
+from .models import Team, Player, Match, Score
+from django.contrib.auth.forms import UserCreationForm
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Ensure user is not an admin by default
+            user.is_staff = False
+            user.is_superuser = False
+            user.save()
+            return redirect('login')  # Redirect to login after successful signup
+    else:
+        form = UserCreationForm()
+    return render(request, 'league/signup.html', {'form': form})
+
+@login_required
+def default_dashboard(request):
+    if request.user.profile.role != 'default':
+        return redirect('home')  # Redirect unauthorized users
+
+    teams = Team.objects.all()  # Default users can view teams
+    players = Player.objects.all().values('firstname', 'lastname', 'teamid')  # Restrict player data
+
+    return render(request, 'league/default_dashboard.html', {
+        'teams': teams,
+        'players': players,
+    })
+
+# Helper function to check if user is admin
+def is_admin(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(is_admin)
+def create_admin(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.is_staff = True
+            user.is_superuser = True
+            user.save()
+            return redirect('admin_panel')
+    else:
+        form = UserCreationForm()
+    return render(request, 'league/create_admin.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def admin_panel(request):
+    return render(request, 'league/admin_panel.html')
+
+# CRUD for Team
+@login_required
+@user_passes_test(is_admin)
+def manage_teams(request):
+    teams = Team.objects.all()
+    print(teams)
+    return render(request, 'league/manage_teams.html', {'teams': teams})
+
+@login_required
+@user_passes_test(is_admin)
+def add_team(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_teams')
+    else:
+        form = TeamForm()
+    return render(request, 'league/edit_team.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def edit_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    if request.method == 'POST':
+        form = TeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_teams')
+    else:
+        form = TeamForm(instance=team)
+    return render(request, 'league/edit_team.html', {'form': form, 'team': team})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    if request.method == 'POST':
+        team.delete()
+        return redirect('manage_teams')
+    return render(request, 'league/confirm_delete.html', {'team': team})
+
+# CRUD for Player
+@login_required
+@user_passes_test(is_admin)
+def manage_players(request):
+    players = Player.objects.all()
+    return render(request, 'league/manage_players.html', {'players': players})
+
+@login_required
+@user_passes_test(is_admin)
+def add_player(request):
+    if request.method == 'POST':
+        form = PlayerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_players')
+    else:
+        form = PlayerForm()
+    return render(request, 'league/edit_player.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def edit_player(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+    if request.method == 'POST':
+        form = PlayerForm(request.POST, instance=player)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_players')
+    else:
+        form = PlayerForm(instance=player)
+    return render(request, 'league/edit_player.html', {'form': form, 'player': player})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_player(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
+    if request.method == 'POST':
+        player.delete()
+        return redirect('manage_players')
+    return render(request, 'league/confirm_delete.html', {'player': player})
+
+# CRUD for Match
+@login_required
+@user_passes_test(is_admin)
+def manage_matches(request):
+    matches = Match.objects.all()
+    return render(request, 'league/manage_matches.html', {'matches': matches})
+
+@login_required
+@user_passes_test(is_admin)
+def add_match(request):
+    if request.method == 'POST':
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_matches')
+    else:
+        form = MatchForm()
+    return render(request, 'league/edit_match.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def edit_match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == 'POST':
+        form = MatchForm(request.POST, instance=match)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_matches')
+    else:
+        form = MatchForm(instance=match)
+    return render(request, 'league/edit_match.html', {'form': form, 'match': match})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == 'POST':
+        match.delete()
+        return redirect('manage_matches')
+    return render(request, 'league/confirm_delete.html', {'match': match})
+
+# CRUD for Score
+@login_required
+@user_passes_test(is_admin)
+def manage_scores(request):
+    scores = Match.objects.all()  # Assuming Match model has `home_score` and `away_score` fields
+    return render(request, 'league/manage_scores.html', {'scores': scores})
+
+@login_required
+@user_passes_test(is_admin)
+def add_score(request):
+    if request.method == 'POST':
+        form = ScoreForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_scores')
+    else:
+        form = ScoreForm()
+    return render(request, 'league/edit_score.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def edit_score(request, score_id=None):
+    if score_id:
+        score = get_object_or_404(Score, pk=score_id)
+    else:
+        score = None
+
+    if request.method == 'POST':
+        form = ScoreForm(request.POST, instance=score)
+        if form.is_valid():
+            score = form.save()
+
+            # Update the match score logic here, if necessary
+            match = score.matchid
+            match.home_score = Score.objects.filter(matchid=match, playerid__teamid=match.hometeamid).aggregate(total_goals=Sum('goals'))['total_goals'] or 0
+            match.away_score = Score.objects.filter(matchid=match, playerid__teamid=match.awayteamid).aggregate(total_goals=Sum('goals'))['total_goals'] or 0
+            match.save()
+
+            return redirect('manage_scores')
+    else:
+        form = ScoreForm(instance=score)
+
+    return render(request, 'league/edit_score.html', {'form': form, 'score': score})
+
+
+@login_required
+@user_passes_test(is_admin)
+def delete_score(request, score_id):
+    score = get_object_or_404(Score, pk=score_id)
+    if request.method == 'POST':
+        score.delete()
+        return redirect('manage_scores')
+    return render(request, 'league/confirm_delete.html', {'score': score})
+
+
 
 def homepage(request):
     with connection.cursor() as cursor:

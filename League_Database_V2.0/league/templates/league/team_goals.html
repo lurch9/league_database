@@ -1,15 +1,24 @@
-<h1>Total Goals by Team</h1>
-<table border="1">
-    <tr>
-        <th>School Name</th>
-        <th>Total Goals</th>
-    </tr>
-    {% for team in team_goals %}
-    <tr>
-        <td>{{ team.SchoolName }}</td>
-        <td>{{ team.TotalGoals }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<br>
-<button><a href="/">Exit</a></button>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Total Goals by Team</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>School Name</th>
+                <th>Total Goals</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in team_goals %}
+                <tr>
+                    <td>{{ team.SchoolName }}</td>
+                    <td>{{ team.TotalGoals }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/" class="btn btn-primary mt-3">Exit</a>
+</div>
+{% endblock %}

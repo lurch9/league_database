@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'league',
 ]
 
+LOGIN_REDIRECT_URL = '/'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

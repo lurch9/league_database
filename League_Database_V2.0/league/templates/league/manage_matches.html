@@ -1,0 +1,32 @@
+{% extends 'base_admin.html' %}
+
+{% block title %}Manage Matches{% endblock %}
+
+{% block content %}
+<h2>Matches</h2>
+<a href="{% url 'add_match' %}" class="btn btn-success mb-3">Add Match</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Match Date</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for match in matches %}
+        <tr>
+            <td>{{ match.matchdate }}</td>
+            <td>{{ match.hometeamid.schoolname }}</td>
+            <td>{{ match.awayteamid.schoolname }}</td>
+            <td>
+                <a href="{% url 'edit_match' match.matchid %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'delete_match' match.matchid %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

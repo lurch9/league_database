@@ -1,0 +1,32 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+<h2>Manage Teams</h2>
+<a href="/admin-panel/teams/add/" class="btn btn-success my-3">Add New Team</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>School Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in teams %}
+        <tr>
+            <td>{{ team.schoolname }}</td>
+            <td>{{ team.adphone }}</td>
+            <td>{{ team.ademail }}</td>
+            <td>{{ team.location }}</td>
+            <td>
+                <a href="{% url 'edit_team' team.teamid %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'delete_team' team.teamid %}" class="btn btn-danger">Delete</a>
+            </td>            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

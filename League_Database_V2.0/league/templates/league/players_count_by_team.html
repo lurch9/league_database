@@ -1,30 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <title>Player Count by Team</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center my-4">Player Count by Team</h1>
-        <table class="table table-striped">
-            <thead class="thead-dark">
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Player Count by Team</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Team Name</th>
+                <th>Player Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in team_counts %}
                 <tr>
-                    <th>Team Name</th>
-                    <th>Player Count</th>
+                    <td>{{ team.TeamName }}</td>
+                    <td>{{ team.PlayerCount }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {% for team in team_counts %}
-                    <tr>
-                        <td>{{ team.TeamName }}</td>
-                        <td>{{ team.PlayerCount }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

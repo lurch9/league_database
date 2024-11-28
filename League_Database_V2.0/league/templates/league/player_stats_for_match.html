@@ -1,32 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lux/bootstrap.min.css">
-    <title>Player Stats for Match</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center my-4">Player Stats for Match {{ match_id }}</h1>
-        <table class="table table-striped">
-            <thead class="thead-dark">
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Player Stats for Match {{ match_id }}</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                {% for column in stats.0.keys %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in stats %}
                 <tr>
-                    {% for column in stats.0.keys %}
-                        <th>{{ column }}</th>
+                    {% for value in stat.values %}
+                        <td>{{ value }}</td>
                     {% endfor %}
                 </tr>
-            </thead>
-            <tbody>
-                {% for stat in stats %}
-                    <tr>
-                        {% for value in stat.values %}
-                            <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
