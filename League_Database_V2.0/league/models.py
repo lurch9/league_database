@@ -82,6 +82,8 @@ class Team(models.Model):
     class Meta:
         managed = False
         db_table = 'Team'
+    def __str__(self):
+        return self.schoolname or "Unnamed Team"
 
 class Player(models.Model):
     playerid = models.AutoField(db_column='PlayerID', primary_key=True)  # Field name made lowercase.

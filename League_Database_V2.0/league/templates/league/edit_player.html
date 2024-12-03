@@ -1,33 +1,14 @@
 {% extends 'base_admin.html' %}
 
-{% block title %}Manage Players{% endblock %}
+{% block title %}Edit Player{% endblock %}
 
 {% block content %}
-<h2>Players</h2>
-<a href="{% url 'add_player' %}" class="btn btn-success mb-3">Add Player</a>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Number</th>
-            <th>Starting Position</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for player in players %}
-        <tr>
-            <td>{{ player.firstname }}</td>
-            <td>{{ player.lastname }}</td>
-            <td>{{ player.number }}</td>
-            <td>{{ player.startingposition }}</td>
-            <td>
-                <a href="{% url 'edit_player' player.playerid %}" class="btn btn-primary btn-sm">Edit</a>
-                <a href="{% url 'delete_player' player.playerid %}" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h2>Edit Player</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{% url 'manage_players' %}" class="btn btn-secondary">Cancel</a>
+</form>
 {% endblock %}
+
