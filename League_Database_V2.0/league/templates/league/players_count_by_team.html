@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Player Count by Team</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Team Name</th>
+                <th>Player Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in team_counts %}
+                <tr>
+                    <td>{{ team.TeamName }}</td>
+                    <td>{{ team.PlayerCount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

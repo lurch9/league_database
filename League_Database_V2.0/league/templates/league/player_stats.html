@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if players %}
+        <h1 class="text-center my-4">Search Results</h1>
+        <ul class="list-group mb-4">
+            {% for player in players %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>{{ player.firstname }} {{ player.lastname }}</strong>
+                    <a href="{% url 'player_stats' player.id %}" class="btn btn-sm btn-primary">View Stats</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif player %}
+        <h1 class="text-center my-4">{{ player.FirstName }} {{ player.LastName }} - Stats</h1>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Total Goals:</strong> {{ player.TotalGoals }}</li>
+            <li class="list-group-item"><strong>Total Assists:</strong> {{ player.TotalAssists }}</li>
+        </ul>
+    {% elif error %}
+        <div class="alert alert-danger text-center" role="alert">
+            {{ error }}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center" role="alert">
+            Please use the search bar to find a player.
+        </div>
+    {% endif %}
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endblock %}

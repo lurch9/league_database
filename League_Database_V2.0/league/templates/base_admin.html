@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <!-- Sidebar -->
+        <div class="list-group">
+            <a href="/admin-panel/" class="list-group-item list-group-item-action">Dashboard</a>
+            <a href="/manage-teams/" class="list-group-item list-group-item-action">Manage Teams</a>
+            <a href="/manage-players/" class="list-group-item list-group-item-action">Manage Players</a>
+            <a href="/manage-matches/" class="list-group-item list-group-item-action">Manage Matches</a>
+            <a href="/manage-scores/" class="list-group-item list-group-item-action">Manage Scores</a>
+        </div>
+    </div>
+    <div class="col-md-9">
+        {% block admin_content %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

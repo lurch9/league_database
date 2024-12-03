@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">{{ team.SchoolName }} - Team Details</h1>
+    
+    <h2>Contact Information</h2>
+    <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Phone:</strong> {{ team.ADPhone }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ team.ADEmail }}</li>
+        <li class="list-group-item"><strong>Location:</strong> {{ team.Location }}</li>
+    </ul>
+
+    <h2>Players</h2>
+    <table class="table table-striped mb-4">
+        <thead class="thead-dark">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Number</th>
+                <th>Position</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td>{{ player.FirstName }}</td>
+                    <td>{{ player.LastName }}</td>
+                    <td>{{ player.Number }}</td>
+                    <td>{{ player.StartingPosition }}</td>
+                    <td>
+                        <a href="/player/{{ player.PlayerID }}/stats/" class="btn btn-info">View Stats</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Matches</h2>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Match Date</th>
+                <th>Home Team</th>
+                <th>Away Team</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match.MatchDate }}</td>
+                    <td>{{ match.HomeTeam }}</td>
+                    <td>{{ match.AwayTeam }}</td>
+                    <td>
+                        <a href="/match/{{ match.MatchID }}/stats/" class="btn btn-primary">View Match Stats</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
